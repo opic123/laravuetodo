@@ -1,0 +1,26 @@
+php artisan preset none
+php artisan preset vue
+npm i vuetify --save
+
+# create new file where we can configure our vuetifyjs
+
+// vuetify.js
+
+import Vue from 'vue';
+import Vuetify from 'vuetify'; // Important! Not vuetify/lib, but just vuetify!!! 
+import 'vuetify/dist/vuetify.min.css';
+
+Vue.use(Vuetify);
+
+const opts = {};
+
+export default new Vuetify(opts);
+
+# go to app.js and initialize our vuetifyjs
+
+import vuetify from './vuetify.js';
+
+const app = new Vue({
+    el: '#app',
+    vuetify
+});
