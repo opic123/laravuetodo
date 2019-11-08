@@ -1,4 +1,4 @@
-# laravueapp
+# laravuetodo
 
 Todo App using Laravel, VueJS and Vuetify. This will give us a practical approach to learning how to use Vue.js and its core concepts.
 
