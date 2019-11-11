@@ -1,6 +1,6 @@
 # laravuetodo
 
-Todo App using Laravel, VueJS and Vuetify. This will give us a practical approach to learning how to use Vue.js and its core concepts.
+Todo App using Laravel, VueJS and Vuetify. This will give us a practical approach in learning how to use Vue.js and its core concepts.
 
 Tutorial Description
 https://www.youtube.com/watch?v=A5S23KS_-bU&list=PLEhEHUEU3x5q-xB1On4CsLPts0-rZ9oos
