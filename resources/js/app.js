@@ -8,8 +8,6 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-import vuetify from './vuetify.js';
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -21,7 +19,6 @@ import vuetify from './vuetify.js';
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('todo-list', require('./components/todos/TodoList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,7 +26,14 @@ Vue.component('todo-list', require('./components/todos/TodoList.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+ 
+import vuetify from './vuetify';
+import TodoList from './components/todos/TodoList';
+
 const app = new Vue({
     el: '#app',
-    vuetify
+    components: {
+        'todo-list': TodoList
+    },
+    vuetify // shortcut to vuetify: vuetify
 });
