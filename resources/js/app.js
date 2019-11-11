@@ -21,8 +21,7 @@ import vuetify from './vuetify.js';
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('main-layout', require('./components/layouts/Master.vue').default);
-// Vue.component('first-vuetify', require('./components/_samples/FirstVuetify.vue').default);
+Vue.component('todo-list', require('./components/todos/TodoList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
