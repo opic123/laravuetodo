@@ -19,7 +19,6 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('main-layout', require('./components/layouts/Master.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,8 +28,12 @@ Vue.component('main-layout', require('./components/layouts/Master.vue').default)
 
  
 import vuetify from './vuetify';
+import TodoList from './components/todos/TodoList';
 
 const app = new Vue({
     el: '#app',
+    components: {
+        'todo-list': TodoList
+    },
     vuetify // shortcut to vuetify: vuetify
 });

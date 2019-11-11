@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <div>
         <v-content>
             <v-container fluid>
                 <v-row align="center" justify="center">
@@ -20,28 +20,11 @@
 
                                         <transition-group name="fade">
 
-                                            <v-list-item v-for="(todo, index) in todosFiltered" :key="todo.id" style="cursor:pointer;">
-
-                                            <v-list-item-action>
-                                                <v-checkbox
-                                                v-model="todo.completed"
-                                                label=""
-                                                ></v-checkbox>
-                                            </v-list-item-action>
-                                            
-                                            <v-list-item-content>
-                                                <v-list-item-title v-if="!todo.editing" @dblclick="editTodo(todo)" :class="{ completed: todo.completed }">{{todo.title}}</v-list-item-title>
-                                                <v-text-field v-model="todo.title" label=""  required v-else="" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)"></v-text-field>
-                                            </v-list-item-content>
-                                            
-                                            <v-list-item-action @click="removeTodo(index)">
-                                                <v-btn icon small>
-                                                <v-icon color="red lighten-1">mdi-delete</v-icon>
-                                                </v-btn>
-                                            </v-list-item-action>
-
-
-                                            </v-list-item>
+                                            <todo-item v-for="(todo, index) in todosFiltered" 
+                                                :key="todo.id" :index="index" :todo="todo" :checkAll="checkAll"
+                                                @finishedEditHandler="finishedEdit" @removedTodoHandler="removeTodo"
+                                                style="cursor:pointer;"> 
+                                            </todo-item>
 
                                         </transition-group>
 
@@ -91,7 +74,7 @@
                 </v-row>
             </v-container>
         </v-content>
-    </v-app>
+    </div>
 </template>
 
 <style scoped>
@@ -108,9 +91,13 @@
 </style>
 
 <script>
+import TodoItem from './TodoItem';
 export default {
     props: {
       source: String,
+    },
+    components: {
+        'todo-item': TodoItem
     },
     data() {
         return {
@@ -168,12 +155,6 @@ export default {
             });
             this.newTodo = '';
         },
-        editTodo(todo) {
-            todo.editing = true;
-        },
-        doneEdit(todo) {
-            todo.editing = false;
-        },
         removeTodo(index) {
             this.todos.splice(index, 1);
         },
@@ -182,6 +163,9 @@ export default {
         },
         clearCompleted() {
             this.todos = this.todos.filter( todo => !todo.completed );
+        },
+        finishedEdit(data) {
+            this.todos.splice(data.index, 1, data.todo);
         }
     }
 }

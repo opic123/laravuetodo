@@ -19,7 +19,10 @@
     <body>
         
         <div id="app">
-            <main-layout></main-layout>
+            <!--VuetifyJS base component-->
+            <v-app>
+                <todo-list></todo-list>
+            </v-app>
         </div>
         
         <script src="{{asset('/js/app.js')}}"></script>
