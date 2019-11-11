@@ -1,6 +1,6 @@
 # laravuetodo
 
-Todo App using Laravel, VueJS and Vuetify. This will give us a practical approach to learning how to use Vue.js and its core concepts.
+Todo App using Laravel, VueJS and VuetifyJS. This will give us a practical approach on learning how to use Vue.js and its core concepts.
 
 Tutorial Description
 https://www.youtube.com/watch?v=A5S23KS_-bU&list=PLEhEHUEU3x5q-xB1On4CsLPts0-rZ9oos
@@ -17,7 +17,7 @@ It's just like any other Laravel project. Basically here is how you use it for y
 * Run php artisan migrate
 
 ### Note
-* Dev branch is different from Master branch
-* Dev branch is the based on the youtube tutorial while the master branch is my own actual implementation
+* Dev branch is based on the youtube tutorial
+* Master branch is a redo of the dev branch with a little bit of code from my own implementation
 
 #### Done !!! Enjoy Customizing and building awesome app
