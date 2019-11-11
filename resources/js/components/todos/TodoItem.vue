@@ -59,7 +59,7 @@ export default {
     },
     methods: {
         removeTodo() {
-            this.$emit('removedTodo', this.index);
+            this.$emit('removedTodoHandler', this.index);
         },
         editTodo(todo) {
             this.beforeEditCache = this.title;
@@ -74,7 +74,7 @@ export default {
                 return;
             }
             this.editing = false;
-            this.$emit('finishedEdit', {
+            this.$emit('finishedEditHandler', {
                 'index': this.index,
                 'todo': {
                     'id': this.id,

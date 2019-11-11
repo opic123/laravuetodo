@@ -1858,73 +1858,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: {
-    index: {
-      type: Number,
-      required: true
-    },
-    todo: {
-      type: Object,
-      required: true
-    },
-    checkAll: {
-      type: Boolean,
-      required: true
-    }
-  },
-  data: function data() {
-    return {
-      id: this.todo.id,
-      title: this.todo.title,
-      completed: this.todo.completed,
-      editing: this.todo.editing,
-      beforeEditCache: ''
-    };
-  },
-  watch: {
-    checkAll: function checkAll() {
-      this.completed = this.checkAll ? true : this.todo.completed;
-    }
-  },
-  methods: {
-    cancelEdit: function cancelEdit(todo) {
-      this.title = this.beforeEditCache;
-      this.editing = false;
-    },
-    editTodo: function editTodo() {
-      this.editing = true;
-    },
-    doneEdit: function doneEdit() {
-      this.editing = false;
-      this.$emit('finishedEditHandler', {
-        index: this.index,
-        todo: {
-          id: this.id,
-          title: this.title,
-          completed: this.completed,
-          editing: this.editing
-        }
-      });
-    },
-    removeTodo: function removeTodo() {
-      this.$emit('removedTodoHandler', this.index);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/todos/TodoList.vue?vue&type=script&lang=js&":
-/*!*************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/todos/TodoList.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _TodoItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TodoItem */ "./resources/js/components/todos/TodoItem.vue");
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -1965,7 +1898,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     removeTodo: function removeTodo() {
-      this.$emit('removedTodo', this.index);
+      this.$emit('removedTodoHandler', this.index);
     },
     editTodo: function editTodo(todo) {
       this.beforeEditCache = this.title;
@@ -1981,7 +1914,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.editing = false;
-      this.$emit('finishedEdit', {
+      this.$emit('finishedEditHandler', {
         'index': this.index,
         'todo': {
           'id': this.id,
@@ -2098,49 +2031,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-<<<<<<< HEAD
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-=======
->>>>>>> dev
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2215,27 +2105,6 @@ __webpack_require__.r(__webpack_exports__);
     removeTodo: function removeTodo(index) {
       this.todos.splice(index, 1);
     },
-<<<<<<< HEAD
-
-    /*editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      todo.editing = true;
-    },
-    cancelEdit(todo) {
-      todo.title = this.beforeEditCache;
-      todo.editing = false;
-    },
-    doneEdit(todo) {
-      if (todo.title.trim().length == 0) {
-        return;
-      }
-      todo.editing = false;
-    },*/
-    finishedEdit: function finishedEdit(data) {
-      this.todos.splice(data.index, 1, data.todo);
-    },
-=======
->>>>>>> dev
     checkAllTodos: function checkAllTodos() {
       var _this = this;
 
@@ -20546,10 +20415,7 @@ var render = function() {
     [
       _c(
         "v-list-item",
-<<<<<<< HEAD
         { key: _vm.index, staticStyle: { cursor: "pointer" } },
-=======
->>>>>>> dev
         [
           _c(
             "v-list-item-action",
@@ -20582,10 +20448,7 @@ var render = function() {
                     [_vm._v(_vm._s(_vm.title))]
                   )
                 : _c("v-text-field", {
-<<<<<<< HEAD
                     directives: [{ name: "focus", rawName: "v-focus" }],
-=======
->>>>>>> dev
                     attrs: { label: "", required: "" },
                     on: {
                       blur: _vm.doneEdit,
@@ -20636,11 +20499,7 @@ var render = function() {
             { on: { click: _vm.removeTodo } },
             [
               _c("v-btn", { attrs: { icon: "", small: "", color: "red" } }, [
-<<<<<<< HEAD
                 _vm._v(" x ")
-=======
-                _vm._v(" X ")
->>>>>>> dev
               ])
             ],
             1
@@ -20766,15 +20625,6 @@ var render = function() {
                                                   cursor: "pointer"
                                                 },
                                                 attrs: {
-<<<<<<< HEAD
-                                                  todo: todo,
-                                                  index: index,
-                                                  checkAll: _vm.checkAll
-                                                },
-                                                on: {
-                                                  removedTodo: _vm.removeTodo,
-                                                  finishedEdit: _vm.finishedEdit
-=======
                                                   index: index,
                                                   todo: todo,
                                                   checkAll: _vm.checkAll
@@ -20784,7 +20634,6 @@ var render = function() {
                                                     _vm.finishedEdit,
                                                   removedTodoHandler:
                                                     _vm.removeTodo
->>>>>>> dev
                                                 }
                                               })
                                             }),
@@ -70552,10 +70401,6 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-<<<<<<< HEAD
-Vue.component('todo-list', __webpack_require__(/*! ./components/todos/TodoList.vue */ "./resources/js/components/todos/TodoList.vue")["default"]);
-=======
->>>>>>> dev
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
