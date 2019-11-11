@@ -18,6 +18,6 @@ It's just like any other Laravel project. Basically here is how you use it for y
 
 ### Note
 * Dev branch is different from Master branch
-* Dev branch is the application of what I learned from watching the tutorial video
+* Dev branch is the based on the youtube tutorial while the master branch is my own actual implementation
 
 #### Done !!! Enjoy Customizing and building awesome app
