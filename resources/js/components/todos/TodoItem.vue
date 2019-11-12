@@ -19,6 +19,13 @@
    
 </template>
 
+<style>
+    .completed{
+        text-decoration: line-through;
+        color: grey;
+    }
+</style>
+
 <script>
 export default {
     props: {

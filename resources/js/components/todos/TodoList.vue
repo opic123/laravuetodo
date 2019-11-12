@@ -77,11 +77,7 @@
     </div>
 </template>
 
-<style scoped>
-  .completed{
-    text-decoration: line-through;
-    color: grey;
-  }
+<style>
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
   }
