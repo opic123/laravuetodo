@@ -18,6 +18,13 @@
     
 </template>
 
+<style>
+    .completed{
+        text-decoration: line-through;
+        color: grey;
+    }
+</style>
+
 <script>
 export default {
     props: {
@@ -58,6 +65,7 @@ export default {
         },
         doneEdit() {
             this.editing = false;
+
             this.$emit('finishedEditHandler', {
                 index: this.index,
                 todo: {
