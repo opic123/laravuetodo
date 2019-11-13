@@ -16,13 +16,18 @@
                                     <v-row>
                                         <v-col cols="12" md="12">
                                         
-                                        <v-text-field v-model="newTodo" label="What needs to be done?" required @keyup.enter="addTodo"></v-text-field>
+                                        <todo-add-item></todo-add-item>
 
                                         <transition-group name="fade">
 
-                                            <todo-item v-for="(todo, index) in todosFiltered" 
+                                            <!--<todo-item v-for="(todo, index) in todosFiltered" 
                                                 :key="todo.id" :index="index" :todo="todo" :checkAll="checkAll"
                                                 @finishedEditHandler="finishedEdit" @removedTodoHandler="removeTodo"
+                                                style="cursor:pointer;"> 
+                                            </todo-item>-->
+
+                                            <todo-item v-for="(todo) in todosFiltered" 
+                                                :key="todo.id" :todo="todo" :isCheckAll="isCheckAll"
                                                 style="cursor:pointer;"> 
                                             </todo-item>
 
@@ -35,37 +40,23 @@
 
                             <v-card-actions>
                                 <v-bottom-navigation>
-                                    <v-btn value="checkAll">
-                                        <v-checkbox v-model="checkAll" @change="checkAllTodos"
-                                        label="Check All"
-                                        ></v-checkbox>
-                                    </v-btn>
+
+                                    <todo-check-all :isCheckAll="isCheckAll"></todo-check-all>
 
                                     <v-spacer />
 
-                                    <v-btn value="remaining">
-                                        <v-chip pill>
-                                        <v-avatar
-                                            left
-                                            color="green"
-                                        >
-                                            {{ remainingTodos }}
-                                        </v-avatar>
-                                        Items Left
-                                        </v-chip>
-                                    </v-btn>
+                                    <todo-items-left :remainingTodos="remainingTodos"></todo-items-left>
 
                                 </v-bottom-navigation>
                             </v-card-actions>
 
                             <v-card-actions>
-                                <v-btn color="default" x-small :class="{ success: filter == 'All' }" @click="filter = 'All'">All</v-btn>
-                                <v-btn color="default" x-small :class="{ success: filter == 'Active' }"  @click="filter = 'Active'">Active</v-btn>
-                                <v-btn color="default" x-small :class="{ success: filter == 'Completed' }"  @click="filter = 'Completed'">Compeleted</v-btn>
+
+                                <todo-filters></todo-filters>
+
                                 <v-spacer />
-                                <transition name="fade">
-                                <v-btn v-if="showClearCompleted" color="red" x-small text @click="clearCompleted">Clear Completed</v-btn>
-                                </transition>
+                                
+                                <todo-clear-completed :showClearCompleted="showClearCompleted"></todo-clear-completed>
                                 
                             </v-card-actions>
 
@@ -87,21 +78,32 @@
 </style>
 
 <script>
+
 import TodoItem from './TodoItem';
+import TodoItemsLeft from './TodoItemsLeft';
+import TodoCheckAll from './TodoCheckAll';
+import TodoClearCompleted from './TodoClearCompleted';
+import TodoFilters from './TodoFilters';
+import TodoAddItem from './TodoAddItem';
+
 export default {
+    name: 'todo-list',
     props: {
       source: String,
     },
     components: {
-        'todo-item': TodoItem
+        'todo-add-item': TodoAddItem,
+        'todo-item': TodoItem,
+        'todo-items-left': TodoItemsLeft,
+        'todo-check-all': TodoCheckAll,
+        'todo-clear-completed': TodoClearCompleted,
+        'todo-filters': TodoFilters
     },
     data() {
         return {
             idForTodo: 3,
             beforeEditCache: '',
-            checkAll: false,
             filter: 'All',
-            newTodo: '',
             todos: [
                 {
                     'id' : 1,
@@ -131,38 +133,65 @@ export default {
         },
         remainingTodos() {
             let count = this.todos.filter( todo => !todo.completed ).length;
-            this.checkAll = count == 0;
             return count;
         },
         showClearCompleted() {
             return this.todos.filter( todo => todo.completed ).length > 0;
+        },
+        isCheckAll() {
+           let count = this.todos.filter( todo => !todo.completed ).length;
+           return count == 0 ? true : false;
         }
     },
     methods: {
-        addTodo() {
-            if ( this.newTodo.trim().length == 0 ) {
+        addTodo(newTodo) {
+            if ( newTodo.trim().length == 0 ) {
                 return;
             }
             this.todos.push({
                 'id' : this.idForTodo++,
-                'title' : this.newTodo,
+                'title' : newTodo,
                 'completed' : false,
                 'editing' : false
             });
             this.newTodo = '';
         },
-        removeTodo(index) {
-            this.todos.splice(index, 1);
+        removeTodo(todo) {
+            this.todos = this.todos.filter((t) => t.id != todo.id);
         },
-        checkAllTodos() {
-            this.todos.map( todo => todo.completed = this.checkAll);
+        checkAllTodos(checked) {
+            this.todos.map( todo => todo.completed = checked);
         },
         clearCompleted() {
             this.todos = this.todos.filter( todo => !todo.completed );
         },
-        finishedEdit(data) {
-            this.todos.splice(data.index, 1, data.todo);
+        finishedEdit(todo) {
+            let index = this.todos.findIndex((t) => t.id == todo.id);
+            this.todos.splice(index, 1, todo);
+            // this will not work for computed properties
+            // this.todos[index] = todo;
         }
+    },
+    created() {
+        // eventBus = global window instance init @app.js
+        eventBus.$on('addNewTodoHandler', (newTodo) => this.addTodo(newTodo) );
+        eventBus.$on('removedTodoHandler', (todo) => this.removeTodo(todo) );
+        eventBus.$on('finishedEditHandler', (todo) => this.finishedEdit(todo) );
+        eventBus.$on('checkAllTodosHandler', (checked) => this.checkAllTodos(checked) );
+        eventBus.$on('clearCompletedTodosHandler', () => this.clearCompleted() );
+        eventBus.$on('applyFilterTodosHandler', (f) => this.filter = f );
+    },
+    mounted() {
+
+    },
+    beforeDestroy() {
+        // eventBus = global window instance init @app.js
+        eventBus.$off('addNewTodoHandler', (newTodo) => this.addTodo(newTodo) );
+        eventBus.$off('removedTodoHandler', (todo) => this.removeTodo(todo) );
+        eventBus.$off('finishedEditHandler', (todo) => this.finishedEdit(todo) );
+        eventBus.$off('checkAllTodosHandler', (checked) => this.checkAllTodos(checked) );
+        eventBus.$off('clearCompletedTodosHandler', () => this.clearCompleted() );
+        eventBus.$off('applyFilterTodosHandler', (f) => this.filter = f );
     }
 }
 </script>

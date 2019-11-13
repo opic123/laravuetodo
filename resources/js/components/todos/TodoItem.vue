@@ -27,16 +27,13 @@
 
 <script>
 export default {
+    name: 'todo-item',
     props: {
-        index: {
-            type: Number,
-            required: true
-        },
         todo: {
             type: Object,
             required: true
         },
-        checkAll: {
+        isCheckAll: {
             type: Boolean,
             required: true
         }
@@ -51,8 +48,18 @@ export default {
         }
     },
     watch: {
-        checkAll() {
-            this.completed = this.checkAll ? true : this.todo.completed;
+        isCheckAll() {
+            this.completed = this.isCheckAll ? true : this.todo.completed;
+        }
+    },
+    computed: {
+        updatedTodo() {
+            return {
+                id: this.id,
+                title: this.title,
+                completed: this.completed,
+                editing: this.editing,
+            };
         }
     },
     methods: {
@@ -65,19 +72,12 @@ export default {
         },
         doneEdit() {
             this.editing = false;
-
-            this.$emit('finishedEditHandler', {
-                index: this.index,
-                todo: {
-                    id: this.id,
-                    title: this.title,
-                    completed: this.completed,
-                    editing: this.editing,
-                }
-            })
+            // eventBus = global window instance init @app.js
+            eventBus.$emit('finishedEditHandler', this.updatedTodo)
         },
         removeTodo() {
-            this.$emit('removedTodoHandler', this.index);
+            // eventBus = global window instance init @app.js
+            eventBus.$emit('removedTodoHandler', this.updatedTodo);
         }
     }
 }
