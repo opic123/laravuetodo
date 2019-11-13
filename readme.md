@@ -21,8 +21,4 @@ It's just like any other Laravel project. Basically here is how you use it for y
 * Run npm install
 * Run php artisan migrate
 
-### Note
-* Dev branch is based on the youtube tutorial
-* Master branch is a redo of the dev branch with a little bit of code from my own implementation
-
 #### Done !!! Enjoy Customizing and building awesome app
