@@ -5,6 +5,8 @@ Todo App using Laravel, VueJS and VuetifyJS. This will give us a practical appro
 Tutorial Description
 https://www.youtube.com/watch?v=A5S23KS_-bU&list=PLEhEHUEU3x5q-xB1On4CsLPts0-rZ9oos
 
+<img src="https://raw.githubusercontent.com/opic123/laravuetodo/master/public/images/Cover.PNG" />
+
 ### Code Coverage
 * VueJS Basics (setup, installation, Vuetify integration, etc...)
 * Component Communication
