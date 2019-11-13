@@ -5,6 +5,11 @@ Todo App using Laravel, VueJS and VuetifyJS. This will give us a practical appro
 Tutorial Description
 https://www.youtube.com/watch?v=A5S23KS_-bU&list=PLEhEHUEU3x5q-xB1On4CsLPts0-rZ9oos
 
+### Code Coverage
+* VueJS Basics (setup, installation, Vuetify integration, etc...)
+* Component Communication
+* Custom Events / Event Bus
+
 ### Installation
 It's just like any other Laravel project. Basically here is how you use it for yourself. (it's not completed yet)
 
