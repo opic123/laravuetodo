@@ -44,7 +44,7 @@ export default {
             title: this.todo.title,
             completed: this.todo.completed,
             editing: this.todo.editing,
-            beforeEditCache: '',
+            beforeEditCache: this.todo.title,
         }
     },
     watch: {
@@ -72,12 +72,10 @@ export default {
         },
         doneEdit() {
             this.editing = false;
-            // eventBus = global window instance init @app.js
-            eventBus.$emit('finishedEditHandler', this.updatedTodo)
+            this.$store.dispatch('finishedEdit', this.updatedTodo);
         },
         removeTodo() {
-            // eventBus = global window instance init @app.js
-            eventBus.$emit('removedTodoHandler', this.updatedTodo);
+            this.$store.dispatch('removeTodo', this.todo);
         }
     }
 }
