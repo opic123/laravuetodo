@@ -17,7 +17,6 @@ export default {
     },
     data() {
         return {
-            // must declare a local model to prevent vuejs from complaning about direct mutation of property values
             checkAll: this.isCheckAll
         }
     },
@@ -28,8 +27,7 @@ export default {
     },
     methods: {
         checkAllTodos() {
-            // eventBus = global window instance init @app.js
-            eventBus.$emit('checkAllTodosHandler', this.checkAll);
+            this.$store.dispatch('checkAllTodos', this.checkAll);
         }
     }
 }

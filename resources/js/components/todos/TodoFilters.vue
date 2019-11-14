@@ -16,14 +16,17 @@ export default {
     name: 'todo-filters',
     data() {
         return {
-            filter: 'All'
+            
+        }
+    },
+    computed: {
+        filter() {
+           return this.$store.state.filter;
         }
     },
     methods: {
-        filterTodos(f) {
-            this.filter = f;
-            // eventBus = global window instance init @app.js
-            eventBus.$emit('applyFilterTodosHandler', this.filter);
+        filterTodos(filter) {
+            this.$store.dispatch('setFilter', filter);
         }
     }
 }

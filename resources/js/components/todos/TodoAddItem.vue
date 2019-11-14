@@ -8,16 +8,19 @@
 <script>
 export default {
     name: 'todo-add-item',
-    data() {
-        return {
-            newTodo: ''
+    computed: {
+        newTodo: {
+            get() {
+                return this.$store.state.newTodo;
+            },
+            set(newTodo){
+                this.$store.commit('setNewTodo', newTodo);
+            }
         }
     },
     methods: {
         addTodo() {
-            // eventBus = global window instance init @app.js
-            eventBus.$emit('addNewTodoHandler', this.newTodo );
-            this.newTodo = '';
+            this.$store.dispatch('addTodo', this.newTodo)
         }
     }
 }

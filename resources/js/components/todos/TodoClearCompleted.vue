@@ -15,8 +15,7 @@ export default {
     },
     methods: {
         clearCompleted() {
-            // eventBus = global window instance init @app.js
-            eventBus.$emit('clearCompletedTodosHandler');
+            this.$store.dispatch('clearCompleted');
         }
     }
 }

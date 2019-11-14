@@ -33,11 +33,13 @@ window.eventBus = new Vue();
  
 import vuetify from './vuetify';
 import TodoList from './components/todos/TodoList';
+import store from './store/index';
 
 const app = new Vue({
     el: '#app',
     components: {
         'todo-list': TodoList
     },
-    vuetify // shortcut to vuetify: vuetify
+    store: store,
+    vuetify: vuetify
 });

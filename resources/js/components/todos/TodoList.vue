@@ -20,13 +20,7 @@
 
                                         <transition-group name="fade">
 
-                                            <!--<todo-item v-for="(todo, index) in todosFiltered" 
-                                                :key="todo.id" :index="index" :todo="todo" :checkAll="checkAll"
-                                                @finishedEditHandler="finishedEdit" @removedTodoHandler="removeTodo"
-                                                style="cursor:pointer;"> 
-                                            </todo-item>-->
-
-                                            <todo-item v-for="(todo) in todosFiltered" 
+                                            <todo-item v-for="todo in todosFiltered" 
                                                 :key="todo.id" :todo="todo" :isCheckAll="isCheckAll"
                                                 style="cursor:pointer;"> 
                                             </todo-item>
@@ -79,6 +73,9 @@
 
 <script>
 
+// The mapGetters helper simply maps store getters to local computed properties:
+import { mapGetters } from 'vuex'
+
 import TodoItem from './TodoItem';
 import TodoItemsLeft from './TodoItemsLeft';
 import TodoCheckAll from './TodoCheckAll';
@@ -101,97 +98,53 @@ export default {
     },
     data() {
         return {
-            idForTodo: 3,
-            beforeEditCache: '',
-            filter: 'All',
-            todos: [
-                {
-                    'id' : 1,
-                    'title' : 'Finish Vue Screencast',
-                    'completed' : false,
-                    'editing' : false
-                },
-                {
-                    'id' : 2,
-                    'title' : 'Take Over the world!',
-                    'completed' : false,
-                    'editing' : false
-                },
-            ]
+            
         }
     },
     computed: {
-        todosFiltered() {
-            if ( this.filter == 'All' ) {
-                return this.todos;
-            } else if ( this.filter == 'Active' ) {
-                return this.todos.filter( todo => !todo.completed );
-            } else if ( this.filter == 'Completed' ) {
-                return this.todos.filter( todo => todo.completed );
-            }
-            return this.todos;
-        },
+        // mix the getters into computed with object spread operator
+        // If you want to map a getter to a different name, use an object: todos: 'todosFiltered'
+        ...mapGetters([
+            'todosFiltered',
+            'remainingTodos',
+            'showClearCompleted',
+            'isCheckAll'
+        ])
+        // access getters manually
+        /*
         remainingTodos() {
-            let count = this.todos.filter( todo => !todo.completed ).length;
-            return count;
-        },
-        showClearCompleted() {
-            return this.todos.filter( todo => todo.completed ).length > 0;
-        },
-        isCheckAll() {
-           let count = this.todos.filter( todo => !todo.completed ).length;
-           return count == 0 ? true : false;
-        }
+            return this.$store.getters.remainingTodos;
+        }*/
     },
     methods: {
         addTodo(newTodo) {
-            if ( newTodo.trim().length == 0 ) {
-                return;
-            }
-            this.todos.push({
-                'id' : this.idForTodo++,
-                'title' : newTodo,
-                'completed' : false,
-                'editing' : false
-            });
-            this.newTodo = '';
+            this.$store.dispatch('addTodo', newTodo);
         },
         removeTodo(todo) {
-            this.todos = this.todos.filter((t) => t.id != todo.id);
+            this.$store.dispatch('removeTodo', todo);
         },
         checkAllTodos(checked) {
-            this.todos.map( todo => todo.completed = checked);
+            this.$store.dispatch('checkAllTodos', checked);
         },
         clearCompleted() {
-            this.todos = this.todos.filter( todo => !todo.completed );
+            this.$store.dispatch('clearCompleted');
         },
         finishedEdit(todo) {
-            let index = this.todos.findIndex((t) => t.id == todo.id);
-            this.todos.splice(index, 1, todo);
-            // this will not work for computed properties
-            // this.todos[index] = todo;
+            this.$store.dispatch('finishedEdit', todo);
         }
+        // commit mutation manullay
+        /*addTodo(newTodo) {
+            this.$store.commit('addTodo', newTodo);
+        },*/
     },
     created() {
-        // eventBus = global window instance init @app.js
-        eventBus.$on('addNewTodoHandler', (newTodo) => this.addTodo(newTodo) );
-        eventBus.$on('removedTodoHandler', (todo) => this.removeTodo(todo) );
-        eventBus.$on('finishedEditHandler', (todo) => this.finishedEdit(todo) );
-        eventBus.$on('checkAllTodosHandler', (checked) => this.checkAllTodos(checked) );
-        eventBus.$on('clearCompletedTodosHandler', () => this.clearCompleted() );
-        eventBus.$on('applyFilterTodosHandler', (f) => this.filter = f );
+
     },
     mounted() {
 
     },
     beforeDestroy() {
-        // eventBus = global window instance init @app.js
-        eventBus.$off('addNewTodoHandler', (newTodo) => this.addTodo(newTodo) );
-        eventBus.$off('removedTodoHandler', (todo) => this.removeTodo(todo) );
-        eventBus.$off('finishedEditHandler', (todo) => this.finishedEdit(todo) );
-        eventBus.$off('checkAllTodosHandler', (checked) => this.checkAllTodos(checked) );
-        eventBus.$off('clearCompletedTodosHandler', () => this.clearCompleted() );
-        eventBus.$off('applyFilterTodosHandler', (f) => this.filter = f );
+
     }
 }
 </script>
