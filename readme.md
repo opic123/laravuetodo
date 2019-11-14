@@ -13,7 +13,7 @@ Todo App using Laravel, VueJS and VuetifyJS. This will give us a practical appro
 ### Installation
 It's just like any other Laravel project. Basically here is how you use it for yourself. (it's not completed yet)
 
-* Clone the repo `https://github.com/opic123/laravuetodo.git`
+* Clone the repo `https://github.com/sgflores/laravuetodo`
 * cd to project folder.
 * Run composer install
 * Save as the .env.example to .env and set your database information
