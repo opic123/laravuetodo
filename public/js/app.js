@@ -2252,7 +2252,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },*/
 
   },
-  created: function created() {},
+  created: function created() {
+    this.$store.dispatch('loadTodos');
+  },
   mounted: function mounted() {},
   beforeDestroy: function beforeDestroy() {}
 });
@@ -71798,6 +71800,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.baseURL = '/api';
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
@@ -72358,6 +72361,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -72367,55 +72373,89 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     idForTodo: 3,
     newTodo: '',
     filter: 'All',
-    todos: [{
-      'id': 1,
-      'title': 'Finish Vue Screencast',
-      'completed': false,
-      'editing': false
-    }, {
-      'id': 2,
-      'title': 'Take Over the world!',
-      'completed': false,
-      'editing': false
-    }]
+    todos: []
   },
   // updates the state of the store
   // mutations will receive the state as first arguments
   // access mutations using this.$store.commit('addTodo')
   mutations: {
+    loadTodos: function loadTodos(state) {
+      // axios is declared as global window object @bootstrap.js
+      axios.get('/todos').then(function (response) {
+        state.todos = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     addTodo: function addTodo(state, newTodo) {
       if (newTodo.trim().length == 0) {
         return;
-      }
+      } // axios is declared as global window object @bootstrap.js
 
-      state.todos.push({
-        'id': state.idForTodo++,
-        'title': newTodo,
-        'completed': false,
-        'editing': false
+
+      axios.post('/todos', {
+        'title': newTodo
+      }).then(function (response) {
+        state.todos.push(response.data);
+        state.newTodo = '';
+      })["catch"](function (error) {
+        console.log(error);
       });
-      state.newTodo = '';
     },
     removeTodo: function removeTodo(state, todo) {
-      state.todos = state.todos.filter(function (t) {
-        return t.id != todo.id;
+      // axios is declared as global window object @bootstrap.js
+      axios["delete"]('/todos/' + todo.id).then(function (response) {
+        state.todos = state.todos.filter(function (t) {
+          return t.id != todo.id;
+        });
+      })["catch"](function (error) {
+        console.log(error);
       });
     },
     checkAllTodos: function checkAllTodos(state, checked) {
-      state.todos.map(function (todo) {
-        return todo.completed = checked;
+      // axios is declared as global window object @bootstrap.js
+      axios.put('/todosCheckAll', {
+        completed: checked
+      }).then(function (response) {
+        state.todos.map(function (todo) {
+          return todo.completed = checked;
+        });
+      })["catch"](function (error) {
+        console.log(error);
       });
     },
     clearCompleted: function clearCompleted(state) {
-      state.todos = state.todos.filter(function (todo) {
-        return !todo.completed;
+      // filter completed todos and then map each todos to return only the id
+      var ids = state.todos.filter(function (todo) {
+        return todo.completed;
+      }).map(function (todo) {
+        return todo.id;
+      }); // axios is declared as global window object @bootstrap.js
+      // delete with params should have data attribute
+
+      axios["delete"]('/todosDeleteAll', {
+        data: {
+          ids: ids
+        }
+      }).then(function (response) {
+        state.todos = state.todos.filter(function (todo) {
+          return !todo.completed;
+        });
+      })["catch"](function (error) {
+        console.log(error);
       });
     },
     finishedEdit: function finishedEdit(state, todo) {
-      var index = state.todos.findIndex(function (t) {
-        return t.id == todo.id;
+      // axios is declared as global window object @bootstrap.js
+      axios.put('/todos/' + todo.id, todo).then(function (response) {
+        console.log(response);
+        var index = state.todos.findIndex(function (t) {
+          return t.id == todo.id;
+        });
+        state.todos.splice(index, 1, todo);
+      })["catch"](function (error) {
+        console.log(error);
       });
-      state.todos.splice(index, 1, todo);
     },
     setFilter: function setFilter(state, filter) {
       state.filter = filter;
@@ -72430,6 +72470,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   // actions will receive the context as first arguments
   // access actions using this.$store.dispatch('addTodo')
   actions: {
+    loadTodos: function loadTodos(context) {
+      context.commit('loadTodos');
+    },
     addTodo: function addTodo(context, newTodo) {
       context.commit('addTodo', newTodo);
     },

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -10,50 +11,93 @@ const store = new Vuex.Store({
         idForTodo: 3,
         newTodo: '',
         filter: 'All',
-        todos: [
-            {
-                'id' : 1,
-                'title' : 'Finish Vue Screencast',
-                'completed' : false,
-                'editing' : false
-            },
-            {
-                'id' : 2,
-                'title' : 'Take Over the world!',
-                'completed' : false,
-                'editing' : false
-            },
-        ]
+        todos: []
     },
 
     // updates the state of the store
     // mutations will receive the state as first arguments
     // access mutations using this.$store.commit('addTodo')
     mutations: {
+        loadTodos(state) {
+            // axios is declared as global window object @bootstrap.js
+            axios.get('/todos')
+            .then((response) => {
+                state.todos = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
         addTodo(state, newTodo) {
             if ( newTodo.trim().length == 0 ) {
                 return;
             }
-            state.todos.push({
-                'id' : state.idForTodo++,
-                'title' : newTodo,
-                'completed' : false,
-                'editing' : false
+            // axios is declared as global window object @bootstrap.js
+            axios.post('/todos', {
+                'title': newTodo
+            })
+            .then((response) => {
+                state.todos.push(response.data);
+                state.newTodo = '';
+            })
+            .catch((error) => {
+                console.log(error);
             });
-            state.newTodo = '';
+           
         },
         removeTodo(state, todo) {
-            state.todos = state.todos.filter((t) => t.id != todo.id);
+            // axios is declared as global window object @bootstrap.js
+            axios.delete('/todos/' + todo.id)
+            .then((response) => {
+                state.todos = state.todos.filter((t) => t.id != todo.id);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         },
         checkAllTodos(state, checked) {
-            state.todos.map( todo => todo.completed = checked);
+            // axios is declared as global window object @bootstrap.js
+            axios.put('/todosCheckAll', {
+                completed: checked
+            })
+            .then((response) => {
+                state.todos.map( todo => todo.completed = checked);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         },
         clearCompleted(state) {
-            state.todos = state.todos.filter( todo => !todo.completed );
+            // filter completed todos and then map each todos to return only the id
+            const ids = (state.todos.filter( todo => todo.completed ))
+                        .map( todo => todo.id);
+
+            // axios is declared as global window object @bootstrap.js
+            // delete with params should have data attribute
+            axios.delete('/todosDeleteAll', {
+                data: {
+                    ids: ids
+                }
+            })
+            .then((response) => {
+                state.todos = state.todos.filter( todo => !todo.completed );
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            
         },
         finishedEdit(state, todo) {
-            let index = state.todos.findIndex((t) => t.id == todo.id);
-            state.todos.splice(index, 1, todo);
+            // axios is declared as global window object @bootstrap.js
+            axios.put('/todos/' + todo.id, todo)
+            .then((response) => {
+                console.log(response);
+                let index = state.todos.findIndex((t) => t.id == todo.id);
+                state.todos.splice(index, 1, todo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         },
         setFilter(state, filter) {
             state.filter = filter;
@@ -69,6 +113,9 @@ const store = new Vuex.Store({
     // actions will receive the context as first arguments
     // access actions using this.$store.dispatch('addTodo')
     actions: {
+        loadTodos(context) {
+            context.commit('loadTodos');
+        },
         addTodo(context, newTodo) {
             context.commit('addTodo', newTodo);
         },

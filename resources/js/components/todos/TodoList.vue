@@ -138,7 +138,7 @@ export default {
         },*/
     },
     created() {
-
+        this.$store.dispatch('loadTodos');
     },
     mounted() {
 
