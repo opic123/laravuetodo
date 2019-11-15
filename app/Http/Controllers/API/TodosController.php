@@ -8,9 +8,19 @@ use App\Http\Requests\TodoRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TodoCheckAllRequest;
 use App\Http\Requests\TodoDestroyAllRequest;
+use App\Repositories\TodoRepositoryInterface;
 
 class TodosController extends Controller
 {
+
+    public $repository;
+
+    public function __construct(TodoRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +28,7 @@ class TodosController extends Controller
      */
     public function index()
     {
-        $todos = Todo::all();
+        $todos = $this->repository->all();
         return response($todos, 200);
     }
 
@@ -30,7 +40,7 @@ class TodosController extends Controller
      */
     public function store(TodoRequest $request)
     {
-        $todo = Todo::create($request->all());
+        $todo = $this->repository->save($request);
         return response($todo, 201);
     }
 
@@ -42,7 +52,7 @@ class TodosController extends Controller
      */
     public function show($id)
     {
-        $todo = Todo::findOrFail($id);
+        $todo = $this->repository->findById($id);
         return response($todo, 200);
     }
 
@@ -55,8 +65,7 @@ class TodosController extends Controller
      */
     public function update(TodoRequest $request, $id)
     {
-        $todo = Todo::findOrFail($id);
-        $todo->update($request->all());
+        $todo = $this->repository->update($request, $id);
         return response('Successfully Updated!', 200);
     }
 
@@ -69,9 +78,7 @@ class TodosController extends Controller
      */
     public function checkAll(Request $request)
     {
-        Todo::query()->update([
-            'completed' => $request->completed
-        ]);
+        $this->repository->checkAll($request);
         return response('Successfully Updated!', 200);
     }
 
@@ -83,8 +90,7 @@ class TodosController extends Controller
      */
     public function destroy($id)
     {
-        $todo = Todo::findOrFail($id);
-        $todo->delete();
+        $this->repository->destroy($id);
         return response('Successfully Deleted!', 200);
     }
 
@@ -96,7 +102,7 @@ class TodosController extends Controller
      */
     public function destroyAll(TodoDestroyAllRequest $request)
     {
-        Todo::whereIn('id', $request->ids)->delete();
+        $this->repository->destroyAll($request);
         return response('Successfully Deleted!', 200);
     }
 }
