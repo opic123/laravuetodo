@@ -91,7 +91,6 @@ const store = new Vuex.Store({
             // axios is declared as global window object @bootstrap.js
             axios.put('/todos/' + todo.id, todo)
             .then((response) => {
-                console.log(response);
                 let index = state.todos.findIndex((t) => t.id == todo.id);
                 state.todos.splice(index, 1, todo);
             })
